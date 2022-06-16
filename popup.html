@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        #outputWindow{
+        #outerWindow {
             display: inline-block;
             border-style: solid;
             border: 5px outset brown;
+            background-image: url("res/background/111536077-light-wooden-table-with-a-crack-wood-texture-background-surface-of-wood-with-nature-color-and-patter.jpg");
+            background-color: red;
         }
 
-        #innerWindow{
+        #innerWindow {
             margin: 5px;
             border-style: solid;
             border: 5px outset brown;
@@ -18,12 +20,12 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: auto auto auto auto;
-            aspect-ratio: 1;
+            grid-template-columns: 42px 42px 42px 42px;
+            grid-template-rows: 42px 42px 42px 42px;
 
         }
 
-        .grid-item{
+        .grid-item {
             border-style: solid;
             border: 0.1px outset grey;
             justify-content: center;
@@ -31,35 +33,53 @@
             display: flex;
         }
 
+        #slot1 {
+            object-fit: cover;
+        }
+
+        button {
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            padding: 0px;
+            margin: 5px;
+            border-radius: 50%;
+        }
+
+
+
     </style>
 </head>
 <body>
-<div id="outputWindow">
-    <button id="clock">CLOCK</button>  <p style="display:inline">00:00:00</p>   <button id="hint">HINT</button>    <button id="ans">ANSWER</button>
+<div id="outerWindow">
+    <button id="clock">C</button>
+    <p style="display:inline">00:00:00</p>
+    <button id="hint">H</button>
+    <button id="ans">A</button>
 
     <div id="innerWindow">
         <div class="grid-container">
-            <div class="grid-item">1</div>
-            <div class="grid-item">2</div>
-            <div class="grid-item">3</div>
-            <div class="grid-item">4</div>
-            <div class="grid-item">5</div>
-            <div class="grid-item">6</div>
-            <div class="grid-item">7</div>
-            <div class="grid-item">8</div>
-            <div class="grid-item">9</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">11</div>
-            <div class="grid-item">12</div>
-            <div class="grid-item">13</div>
-            <div class="grid-item">14</div>
-            <div class="grid-item">15</div>
-            <div class="grid-item">16</div>
+            <div class="grid-item"><img id="slot1" src="res/numbers/numbers_1.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_2.png"></div>
+
+            <div class="grid-item"><img src="res/numbers/numbers_3.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_4.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_5.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_6.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_7.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_8.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_9.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_10.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_11.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_12.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_13.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_14.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_15.png"></div>
+            <div class="grid-item"><img src="res/numbers/numbers_16.png"></div>
         </div>
     </div>
 
 </div>
-
 
 
 </body>
