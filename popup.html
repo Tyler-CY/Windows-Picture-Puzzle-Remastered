@@ -3,19 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        #outerWindow {
-            display: inline-block;
-            border-style: solid;
-            border: 5px outset brown;
-            background-image: url("res/background/111536077-light-wooden-table-with-a-crack-wood-texture-background-surface-of-wood-with-nature-color-and-patter.jpg");
-            background-color: red;
-        }
 
-        #innerWindow {
-            margin: 5px;
-            border-style: solid;
-            border: 5px outset brown;
-        }
 
 
         .grid-container {
@@ -35,6 +23,20 @@
 
         #slot1 {
             object-fit: cover;
+        }
+
+        #outerWindow {
+            display: inline-block;
+            border-style: solid;
+            border: 5px outset brown;
+            background-image: url("res/background/111536077-light-wooden-table-with-a-crack-wood-texture-background-surface-of-wood-with-nature-color-and-patter.jpg");
+            background-color: red;
+        }
+
+        #innerWindow {
+            margin: 5px;
+            border-style: solid;
+            border: 5px outset brown;
         }
 
         button {
@@ -63,18 +65,17 @@
         }
 
         #hint{
-            float: right;
             position: relative;
+            left: 12%;
             background: url("res/buttons/help_FILL1_wght400_GRAD0_opsz48.png");
             background-position: center;
             background-size: 100% 100%;
         }
 
         #timerText {
-            display:inline;
-            height: 20px;
-            line-height: 20px;
+            display: inline;
             font-family: "Verdana";
+            vertical-align: 16%;
         }
 
 
@@ -85,7 +86,7 @@
 <body>
 <div id="outerWindow">
     <button id="clock"></button>
-    <p id="timerText">1234567890</p>
+    <p id="timerText">1237890</p>
     <button id="ans"></button>
     <button id="hint"></button>
 
