@@ -42,9 +42,41 @@
             height: 20px;
             text-align: center;
             padding: 0px;
-            margin: 5px;
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
             border-radius: 50%;
+            border-width: 1px;
         }
+
+        #clock {
+            background: url("res/buttons/schedule_FILL1_wght400_GRAD0_opsz48.png");
+            background-position: center;
+            background-size: 100% 100%;
+        }
+
+        #ans {
+            float: right;
+            background: url("res/buttons/swap_horizontal_circle_FILL1_wght400_GRAD0_opsz48.png");
+            background-position: center;
+            background-size: 100% 100%;
+        }
+
+        #hint{
+            float: right;
+            position: relative;
+            background: url("res/buttons/help_FILL1_wght400_GRAD0_opsz48.png");
+            background-position: center;
+            background-size: 100% 100%;
+        }
+
+        #timerText {
+            display:inline;
+            height: 20px;
+            line-height: 20px;
+            font-family: "Verdana";
+        }
+
 
 
 
@@ -52,10 +84,11 @@
 </head>
 <body>
 <div id="outerWindow">
-    <button id="clock">C</button>
-    <p style="display:inline">00:00:00</p>
-    <button id="hint">H</button>
-    <button id="ans">A</button>
+    <button id="clock"></button>
+    <p id="timerText">1234567890</p>
+    <button id="ans"></button>
+    <button id="hint"></button>
+
 
     <div id="innerWindow">
         <div class="grid-container">
