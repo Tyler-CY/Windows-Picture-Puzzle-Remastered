@@ -23,23 +23,26 @@ function makeRandomMove(){
 
     // Extract the grid number (e.g. extract 15 from "grid15").
     const gridNumber = Number(emptyGrid.id.toString().slice(4));
+    // Extract grid row and column
+    const gridRow = Number(String(gridNumber).slice(0, 1));
+    const gridCol = Number(String(gridNumber).slice(1));
 
     // Update numOfAdjacentGrids by checking the four adjacent grids.
-    const topGridItem = document.getElementById("grid" + (gridNumber - 4));
+    const topGridItem = document.getElementById("grid" + (gridRow - 1) + gridCol);
     // If the adjacent grid is non null then add one to the number of adjacent grids.
     if (topGridItem) {
         adjacentGrids.push(topGridItem);
     }
     // Logic same as above.
-    const bottomGridItem = document.getElementById("grid" + (gridNumber + 4));
+    const bottomGridItem = document.getElementById("grid" + + (gridRow + 1) + gridCol);
     if (bottomGridItem) {
         adjacentGrids.push(bottomGridItem);
     }
-    const leftGridItem = document.getElementById("grid" + (gridNumber - 1));
+    const leftGridItem = document.getElementById("grid" + gridRow + (gridCol + 1));
     if (leftGridItem) {
         adjacentGrids.push(leftGridItem);
     }
-    const rightGridItem = document.getElementById("grid" + (gridNumber + 1));
+    const rightGridItem = document.getElementById("grid" + gridRow + (gridCol - 1));
     if (rightGridItem) {
         adjacentGrids.push(rightGridItem);
     }
@@ -114,6 +117,9 @@ function moveTile() {
 
     // Extract the grid number (e.g. extract 15 from "grid15").
     const gridNumber = Number(parentId.toString().slice(4));
+    // Extract grid row and column
+    const gridRow = Number(String(gridNumber).slice(0, 1));
+    const gridCol = Number(String(gridNumber).slice(1));
 
     // ifCondition checks if any of the four neighbour grids is empty.
     let ifCondition = false;
@@ -121,24 +127,24 @@ function moveTile() {
     let targetGrid;
 
     // Update ifCondition and targetGrid by checking the four adjacent grids.
-    const topGridItem = document.getElementById("grid" + (gridNumber - 4));
+    const topGridItem = document.getElementById("grid" + (gridRow - 1) + gridCol);
     // If the adjacent grid is empty, then it has no childNodes.
     if (topGridItem != null && topGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = topGridItem;
     }
     // Logic same as above.
-    const bottomGridItem = document.getElementById("grid" + (gridNumber + 4));
+    const bottomGridItem = document.getElementById("grid" + + (gridRow + 1) + gridCol);
     if (bottomGridItem != null && bottomGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = bottomGridItem;
     }
-    const leftGridItem = document.getElementById("grid" + (gridNumber - 1));
+    const leftGridItem = document.getElementById("grid" + gridRow + (gridCol + 1));
     if (leftGridItem != null && leftGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = leftGridItem;
     }
-    const rightGridItem = document.getElementById("grid" + (gridNumber + 1));
+    const rightGridItem = document.getElementById("grid" + gridRow + (gridCol - 1));
     if (rightGridItem != null && rightGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = rightGridItem;
@@ -156,31 +162,34 @@ function moveTileById(parentId) {
 
     // Extract the grid number (e.g. extract 15 from "grid15").
     const gridNumber = Number(parentId.toString().slice(4));
+    // Extract grid row and column
+    const gridRow = Number(String(gridNumber).slice(0, 1));
+    const gridCol = Number(String(gridNumber).slice(1));
 
     // ifCondition checks if any of the four neighbour grids is empty.
     let ifCondition = false;
     // targetGrid is the grid which is currently empty on the board.
     let targetGrid;
 
-    // Update ifCondition and targetGrid by checking the four adjacent grids.
-    const topGridItem = document.getElementById("grid" + (gridNumber - 4));
+// Update ifCondition and targetGrid by checking the four adjacent grids.
+    const topGridItem = document.getElementById("grid" + (gridRow - 1) + gridCol);
     // If the adjacent grid is empty, then it has no childNodes.
     if (topGridItem != null && topGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = topGridItem;
     }
     // Logic same as above.
-    const bottomGridItem = document.getElementById("grid" + (gridNumber + 4));
+    const bottomGridItem = document.getElementById("grid" + + (gridRow + 1) + gridCol);
     if (bottomGridItem != null && bottomGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = bottomGridItem;
     }
-    const leftGridItem = document.getElementById("grid" + (gridNumber - 1));
+    const leftGridItem = document.getElementById("grid" + gridRow + (gridCol + 1));
     if (leftGridItem != null && leftGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = leftGridItem;
     }
-    const rightGridItem = document.getElementById("grid" + (gridNumber + 1));
+    const rightGridItem = document.getElementById("grid" + gridRow + (gridCol - 1));
     if (rightGridItem != null && rightGridItem.childNodes.length === 0) {
         ifCondition = true;
         targetGrid = rightGridItem;
