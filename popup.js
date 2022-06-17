@@ -28,12 +28,34 @@ function deleteFirstChild(){
 
     var gridNumber = Number(parentId.toString().slice(4));
 
-    // if (document.getElementById("grid" + (gridNumber - 4))
+    var ifCondition = false;
+    var targetGrid;
 
-    document.getElementById("testingOutput").innerText = gridNumber;
-
-    var childNodesCount = parentElement.childNodes.length;
-    for (let i = 0; i < childNodesCount; i++){
-        parentElement.childNodes[i].remove();
+    const topGridItem = document.getElementById("grid" + (gridNumber - 4));
+    if (topGridItem != null && topGridItem.childNodes.length == 0){
+        ifCondition = true;
+        targetGrid = topGridItem;
     }
+    const bottomGridItem = document.getElementById("grid" + (gridNumber + 4));
+    if (bottomGridItem != null && bottomGridItem.childNodes.length == 0){
+        ifCondition = true;
+        targetGrid = bottomGridItem;
+    }
+    const leftGridItem = document.getElementById("grid" + (gridNumber - 1));
+    if (leftGridItem != null && leftGridItem.childNodes.length == 0){
+        ifCondition = true;
+        targetGrid = leftGridItem;
+    }
+    const rightGridItem = document.getElementById("grid" + (gridNumber + 1));
+    if (rightGridItem != null && rightGridItem.childNodes.length == 0){
+        ifCondition = true;
+        targetGrid = rightGridItem;
+    }
+
+    if (ifCondition){
+            document.getElementById("testingOutput").innerText = gridNumber;
+            targetGrid.appendChild(parentElement.firstChild);
+    }
+
+
 }
