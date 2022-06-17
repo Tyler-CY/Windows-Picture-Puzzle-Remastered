@@ -18,6 +18,10 @@ function addListenerToGridItems() {
     const gridList = document.querySelectorAll(".grid-item");
     const length = gridList.length;
     for (let i = 0; i < length; i++) {
+
+        if (gridList[i].firstChild){
+            gridList[i].firstChild.setAttribute("draggable", false);
+        }
         gridList[i].addEventListener("click", deleteFirstChild);
     }
 }
