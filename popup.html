@@ -44,7 +44,7 @@
             background-color: saddlebrown;
         }
 
-        button {
+        .top-bar {
             width: 20px;
             height: 20px;
             text-align: center;
@@ -88,10 +88,10 @@
 </head>
 <body>
 <div id="outerWindow">
-    <button id="clock"></button>
+    <button id="clock" class="top-bar" ></button>
     <p id="timerText">00:00:00</p>
-    <button id="ans"></button>
-    <button id="hint"></button>
+    <button id="ans" class="top-bar" ></button>
+    <button id="hint" class="top-bar" ></button>
 
 
     <div id="innerWindow" class="grid-container">
@@ -116,6 +116,7 @@
 </div>
 
 <p id="testingOutput">Testing</p>
+<button id="checkEmptyGrid">Check Empty Grid</button>
 
 <script src="popup.js"></script>
 </body>
