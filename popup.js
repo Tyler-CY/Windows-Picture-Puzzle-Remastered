@@ -1,10 +1,68 @@
 addListenerToGridItems()
 document.getElementById("hint").addEventListener("click", handleHintButton);
-
+document.getElementById("checkEmptyGrid").addEventListener("click", makeRandomMove);
+document.getElementById("swap").addEventListener("click", handleSwapButton)
 
 /*
 Helper Functions
  */
+
+// Shuffle the tiles
+function handleSwapButton(){
+    for (let i = 0; i < 100; i++){
+        makeRandomMove();
+    }
+}
+
+// Makes a random move based on the position of the empty grid
+function makeRandomMove(){
+    var emptyGrid = findEmptyGrid();
+
+    // Find out the number of adjacent grids to the empty grid so we can randomly draw on of the grids to move
+    var adjacentGrids = [];
+
+    // Extract the grid number (e.g. extract 15 from "grid15").
+    const gridNumber = Number(emptyGrid.id.toString().slice(4));
+
+    // Update numOfAdjacentGrids by checking the four adjacent grids.
+    const topGridItem = document.getElementById("grid" + (gridNumber - 4));
+    // If the adjacent grid is non null then add one to the number of adjacent grids.
+    if (topGridItem) {
+        adjacentGrids.push(topGridItem);
+    }
+    // Logic same as above.
+    const bottomGridItem = document.getElementById("grid" + (gridNumber + 4));
+    if (bottomGridItem) {
+        adjacentGrids.push(bottomGridItem);
+    }
+    const leftGridItem = document.getElementById("grid" + (gridNumber - 1));
+    if (leftGridItem) {
+        adjacentGrids.push(leftGridItem);
+    }
+    const rightGridItem = document.getElementById("grid" + (gridNumber + 1));
+    if (rightGridItem) {
+        adjacentGrids.push(rightGridItem);
+    }
+
+    // Choose a random grid
+    const randomGrid = adjacentGrids[Math.floor(Math.random() * adjacentGrids.length)];
+    moveTileById(randomGrid.id);
+}
+
+// Returns the grid-item element (div) which is currently empty.
+function findEmptyGrid(){
+    // Find all grid-items
+    const gridList = document.querySelectorAll(".grid-item");
+
+    const length = gridList.length;
+
+    // Check each grid and returns the one which is empty. There should only be one empty grid.
+    for (let i = 0; i < length; i++) {
+        if (!gridList[i].firstChild) {
+            return gridList[i];
+        }
+    }
+}
 
 
 // Handler for Hint Button. Toggles between the puzzle and the hint image.
@@ -90,6 +148,47 @@ function moveTile() {
     if (ifCondition) {
         targetGrid.appendChild(parentElement.firstChild);
     }
+}
+
+// Moves the tile on the current grid to the adjacent available grid.
+function moveTileById(parentId) {
+    const parentElement = document.getElementById(parentId);
+
+    // Extract the grid number (e.g. extract 15 from "grid15").
+    const gridNumber = Number(parentId.toString().slice(4));
+
+    // ifCondition checks if any of the four neighbour grids is empty.
+    let ifCondition = false;
+    // targetGrid is the grid which is currently empty on the board.
+    let targetGrid;
+
+    // Update ifCondition and targetGrid by checking the four adjacent grids.
+    const topGridItem = document.getElementById("grid" + (gridNumber - 4));
+    // If the adjacent grid is empty, then it has no childNodes.
+    if (topGridItem != null && topGridItem.childNodes.length === 0) {
+        ifCondition = true;
+        targetGrid = topGridItem;
+    }
+    // Logic same as above.
+    const bottomGridItem = document.getElementById("grid" + (gridNumber + 4));
+    if (bottomGridItem != null && bottomGridItem.childNodes.length === 0) {
+        ifCondition = true;
+        targetGrid = bottomGridItem;
+    }
+    const leftGridItem = document.getElementById("grid" + (gridNumber - 1));
+    if (leftGridItem != null && leftGridItem.childNodes.length === 0) {
+        ifCondition = true;
+        targetGrid = leftGridItem;
+    }
+    const rightGridItem = document.getElementById("grid" + (gridNumber + 1));
+    if (rightGridItem != null && rightGridItem.childNodes.length === 0) {
+        ifCondition = true;
+        targetGrid = rightGridItem;
+    }
 
 
+    // Check if we can move the tile.
+    if (ifCondition) {
+        targetGrid.appendChild(parentElement.firstChild);
+    }
 }
