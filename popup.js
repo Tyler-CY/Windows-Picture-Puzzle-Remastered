@@ -6,11 +6,39 @@ initializeDOM();
 
 addListenerToGridItems()
 
-
+document.getElementById("clock").addEventListener("click", checkIfGameIsWon);
 
 /*
 Helper Functions
  */
+
+// Check if the tiles are in the correct position
+function checkIfGameIsWon() {
+    // Find all grid-items
+    const gridList = document.querySelectorAll(".grid-item");
+
+    const length = gridList.length;
+
+    // if grid33 has a child (image), then the puzzle is not complete, so we can do an early return.
+    if (gridList[15].firstChild) {
+        return false;
+    }
+
+    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+    for (let i = 0; i < length - 1; i++) {
+        if (gridList[i].firstChild) {
+            let correct_position = (gridList[i].firstChild.src.toString()).includes("_" + (i + 1));
+            if (!correct_position){
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    console.log("true");
+    return true;
+}
 
 // Update Timer event
 function updateTimerText() {
@@ -59,6 +87,9 @@ function handleSwapButton() {
     // Clear previous timer and reset the time
     clearInterval(interval);
     document.getElementById("timerText").innerText = "00:00:00";
+    // Remove the clear winning message
+    // TODO: change to overlay
+    document.getElementById("testtext").innerText = "";
 }
 
 // Makes a random move based on the position of the empty grid.
@@ -143,6 +174,7 @@ function addListenerToGridItems() {
     const gridList = document.querySelectorAll(".grid-item");
 
     const length = gridList.length;
+    console.log("length = " + length);
 
     // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
     for (let i = 0; i < length; i++) {
@@ -206,15 +238,26 @@ function moveSingleTile(parentId) {
         }
 
     }
+
+
 }
 
 // Moves the tile on the current grid to the adjacent available grid.
+// This method is called IF AND ONLY IF a tile is moved by a user
 function moveTileByButton() {
     const parentId = event.currentTarget.id;
     moveSingleTile(parentId);
+
+    // Check if the move is game-winning
+    if (checkIfGameIsWon()){
+        clearInterval(interval);
+        // TODO: change to overlay
+        document.getElementById("testtext").innerText = "You Won!";
+    }
 }
 
 // Moves the tile on the current grid to the adjacent available grid.
+// This method is called IF AND ONLY IF the reshuffle button is clicked.
 function moveTileById(parentId) {
     moveSingleTile(parentId);
 }
