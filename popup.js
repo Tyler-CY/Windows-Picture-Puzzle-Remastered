@@ -1,18 +1,30 @@
-var testingOutput = document.getElementById("testingOutput");
 
-
-var innerWindow = document.getElementById("innerWindow");
-
-for (i = 0; i < innerWindow.childNodes.length; i++){
-    var gridItem = innerWindow.childNodes[i];
-    if (typeof(gridItem) == "HTMLDivElement"){
-
-        testingOutput.innerText += gridItem.toString()
-    }
-
-}
 
 addListenerToGridItems()
+document.getElementById("hint").addEventListener("click", handleHintButton);
+
+
+function handleHintButton(){
+    const gridList = document.querySelectorAll(".grid-item");
+    const length = gridList.length;
+
+    // gridList[0].style.display is originally "" (empty string)
+    var visibility = "block";
+    if (gridList[0].style.display != "none"){
+        visibility = "none";
+    }
+
+    for (let i = 0; i < length; i++) {
+        gridList[i].style.display = visibility;
+    }
+
+    if (visibility == "none"){
+        document.getElementById("innerWindow").style.backgroundImage="url('res/numbers/numbers_full.png')";
+    }
+    else {
+        document.getElementById("innerWindow").style.backgroundImage="none";
+    }
+}
 
 function addListenerToGridItems() {
     const gridList = document.querySelectorAll(".grid-item");
