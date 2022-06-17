@@ -1,0 +1,12 @@
+{
+  "name": "Windows Picture Puzzle Remastered",
+  "description": "A remastered version of the classic Windows Gadget, Picture Puzzle, from Windows Vista and 7",
+  "version": "0.3",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "res/icons/extension_FILL0_wght400_GRAD0_opsz48.png"
+  }
+}
