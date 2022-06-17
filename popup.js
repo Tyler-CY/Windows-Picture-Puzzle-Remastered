@@ -6,7 +6,8 @@ initializeDOM();
 
 addListenerToGridItems()
 
-document.getElementById("clock").addEventListener("click", checkIfGameIsWon);
+handleSwapButton();
+
 
 /*
 Helper Functions
