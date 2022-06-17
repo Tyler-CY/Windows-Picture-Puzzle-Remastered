@@ -6,6 +6,8 @@ document.getElementById("hint").addEventListener("click", handleHintButton);
 Helper Functions
  */
 
+
+// Handler for Hint Button. Toggles between the puzzle and the hint image.
 function handleHintButton() {
     const gridList = document.querySelectorAll(".grid-item");
     const length = gridList.length;
@@ -29,6 +31,7 @@ function handleHintButton() {
     }
 }
 
+// Initialize the grid items to listen to clicking
 function addListenerToGridItems() {
     // Find all grid-items
     const gridList = document.querySelectorAll(".grid-item");
@@ -42,11 +45,12 @@ function addListenerToGridItems() {
                 return false;
             };
         }
-        gridList[i].addEventListener("click", deleteFirstChild);
+        gridList[i].addEventListener("click", moveTile);
     }
 }
 
-function deleteFirstChild() {
+// Moves the tile on the current grid to the adjacent available grid.
+function moveTile() {
     const parentId = event.currentTarget.id;
     const parentElement = document.getElementById(parentId);
 
