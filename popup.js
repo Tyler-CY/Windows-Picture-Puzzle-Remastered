@@ -1,10 +1,10 @@
-var reshuffled = false;
-var interval;
-var pauseInterval = 0;
-var pauseStartTime = 0;
-var pauseEndTime = 0;
-var startTime;
-var paused = false;
+let reshuffled = false;
+let interval;
+let pauseInterval = 0;
+let pauseStartTime = 0;
+let pauseEndTime = 0;
+let startTime;
+let paused = false;
 
 initializeDOM();
 
@@ -129,7 +129,7 @@ function handleSwapButton() {
         }
         // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
         for (let i = 0; i < length - 1; i++) {
-            var img = document.createElement("img");
+            const img = document.createElement("img");
             img.src = "res/numbers/numbers_" + (i + 1) + ".png";
             img.draggable = false;
             gridList[i].appendChild(img);
