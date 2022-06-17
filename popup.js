@@ -1,12 +1,38 @@
+var reshuffled = false;
+var interval;
+var startTime;
+
+initializeDOM();
+
 addListenerToGridItems()
-document.getElementById("hint").addEventListener("click", handleHintButton);
-document.getElementById("swap").addEventListener("click", handleSwapButton)
+
+
 
 /*
 Helper Functions
  */
 
-// Shuffle the tiles
+// Update Timer event
+function updateTimerText() {
+    console.log("running");
+    let interval = (new Date().getTime() - startTime) / 1000;
+    console.log(startTime);
+
+    console.log(interval);
+    let sec = Math.floor(interval % 60);
+    let min = Math.floor(interval / 60) % 60;
+    let hour = Math.floor(interval / 3600);
+    document.getElementById("timerText").innerText = ("0" + hour).slice(-2) + ":" + ("0" + min).slice(-2) + ":" + ("0" + sec).slice(-2);
+
+}
+
+// Initialize Buttons of the DOM.
+function initializeDOM() {
+    document.getElementById("hint").addEventListener("click", handleHintButton);
+    document.getElementById("swap").addEventListener("click", handleSwapButton)
+}
+
+// Shuffle the tiles.
 function handleSwapButton() {
     for (let i = 0; i < 500; i++) {
         makeRandomMove();
@@ -27,13 +53,19 @@ function handleSwapButton() {
         moveTileById("grid" + gridRow + (gridCol + 1));
         gridCol += 1;
     }
+
+    // Timer begins when the tiles are reshuffled AND at least one tile is moved afterwards.
+    reshuffled = true;
+    // Clear previous timer and reset the time
+    clearInterval(interval);
+    document.getElementById("timerText").innerText = "00:00:00";
 }
 
-// Makes a random move based on the position of the empty grid
+// Makes a random move based on the position of the empty grid.
 function makeRandomMove() {
     const emptyGrid = findEmptyGrid();
 
-    // Find out the number of adjacent grids to the empty grid so we can randomly draw on of the grids to move
+    // Find out the number of adjacent grids to the empty grid so we can randomly draw on of the grids to move.
     let adjacentGrids = [];
 
     // Extract grid row and column
@@ -60,7 +92,7 @@ function makeRandomMove() {
         adjacentGrids.push(rightGridItem);
     }
 
-    // Choose a random grid
+    // Choose a random grid.
     const randomGrid = adjacentGrids[Math.floor(Math.random() * adjacentGrids.length)];
     moveTileById(randomGrid.id);
 }
@@ -105,7 +137,7 @@ function handleHintButton() {
     }
 }
 
-// Initialize the grid items to listen to clicking
+// Initialize the grid items to listen to clicking.
 function addListenerToGridItems() {
     // Find all grid-items
     const gridList = document.querySelectorAll(".grid-item");
@@ -124,7 +156,7 @@ function addListenerToGridItems() {
 }
 
 function moveSingleTile(parentId) {
-    // Extract grid row and column
+    // Extract grid row and column.
     const gridRow = Number(parentId.slice(4, 5));
     const gridCol = Number(parentId.slice(5));
 
@@ -161,7 +193,18 @@ function moveSingleTile(parentId) {
     // Check if we can move the tile.
     if (ifCondition) {
         const parentElement = document.getElementById(parentId);
+        // Swap images.
         targetGrid.appendChild(parentElement.firstChild);
+
+        // Start the timer when the FIRST tile is moved after reshuffling.
+        if (reshuffled) {
+            startTime = new Date().getTime();
+            interval = setInterval(updateTimerText, 1000);
+            reshuffled = false;
+        } else {
+            // document.getElementById("testtext").innerText = "Currently In Game";
+        }
+
     }
 }
 
