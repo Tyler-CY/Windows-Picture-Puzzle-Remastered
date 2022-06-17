@@ -62,26 +62,53 @@ function initializeDOM() {
 
 // Shuffle the tiles.
 function handleSwapButton() {
-    for (let i = 0; i < 500; i++) {
-        makeRandomMove();
+    if (checkIfGameIsWon()){
+        for (let i = 0; i < 500; i++) {
+            makeRandomMove();
+        }
+
+        const emptyGrid = findEmptyGrid();
+        // Extract grid row and column
+        let gridRow = Number(emptyGrid.id.slice(4, 5));
+        let gridCol = Number(emptyGrid.id.slice(5));
+        console.log(gridRow, gridCol);
+
+        // Moves the empty slot to the bottom right corner.
+        while (gridRow !== 3) {
+            moveTileById("grid" + (gridRow + 1) + gridCol);
+            gridRow += 1;
+        }
+        while (gridCol !== 3) {
+            moveTileById("grid" + gridRow + (gridCol + 1));
+            gridCol += 1;
+        }
+    }
+    else{
+        // Moves the tiles to the winning positions
+        // Find all grid-items
+        const gridList = document.querySelectorAll(".grid-item");
+
+        const length = gridList.length;
+
+        // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+        for (let i = 0; i < length; i++) {
+            if (gridList[i].firstChild) {
+                gridList[i].firstChild.remove();
+            }
+        }
+        // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+        for (let i = 0; i < length - 1; i++) {
+            var img = document.createElement("img");
+            img.src = "res/numbers/numbers_" + (i + 1) + ".png";
+            img.draggable = false;
+            gridList[i].appendChild(img);
+        }
     }
 
-    const emptyGrid = findEmptyGrid();
-    // Extract grid row and column
-    let gridRow = Number(emptyGrid.id.slice(4, 5));
-    let gridCol = Number(emptyGrid.id.slice(5));
-    console.log(gridRow, gridCol);
 
-    // Moves the empty slot to the bottom right corner.
-    while (gridRow !== 3) {
-        moveTileById("grid" + (gridRow + 1) + gridCol);
-        gridRow += 1;
-    }
-    while (gridCol !== 3) {
-        moveTileById("grid" + gridRow + (gridCol + 1));
-        gridCol += 1;
-    }
-
+    /*
+    Always do below
+     */
     // Timer begins when the tiles are reshuffled AND at least one tile is moved afterwards.
     reshuffled = true;
     // Clear previous timer and reset the time
@@ -174,7 +201,6 @@ function addListenerToGridItems() {
     const gridList = document.querySelectorAll(".grid-item");
 
     const length = gridList.length;
-    console.log("length = " + length);
 
     // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
     for (let i = 0; i < length; i++) {
