@@ -1,6 +1,10 @@
 var reshuffled = false;
 var interval;
+var pauseInterval = 0;
+var pauseStartTime = 0;
+var pauseEndTime = 0;
 var startTime;
+var paused = false;
 
 initializeDOM();
 
@@ -41,24 +45,50 @@ function checkIfGameIsWon() {
     return true;
 }
 
-// Update Timer event
+// Update timer
 function updateTimerText() {
-    console.log("running");
-    let interval = (new Date().getTime() - startTime) / 1000;
-    console.log(startTime);
 
-    console.log(interval);
-    let sec = Math.floor(interval % 60);
-    let min = Math.floor(interval / 60) % 60;
-    let hour = Math.floor(interval / 3600);
+    //console.log(new Date().getTime(), startTime, pauseInterval)
+    console.log("Duration from startTime: " + (new Date().getTime() - startTime) + "; pauseInterval: " + pauseInterval);
+    let duration = (new Date().getTime() - startTime - pauseInterval) / 1000;
+
+
+    console.log(duration);
+    let sec = Math.floor(duration % 60);
+    let min = Math.floor(duration / 60) % 60;
+    let hour = Math.floor(duration / 3600);
     document.getElementById("timerText").innerText = ("0" + hour).slice(-2) + ":" + ("0" + min).slice(-2) + ":" + ("0" + sec).slice(-2);
 
+}
+
+// Pause the timer
+function handleClockButton(){
+    console.log("hi")
+    if (!paused){
+        clearInterval(interval);
+        pauseStartTime = new Date().getTime();
+        pauseEndTime = 0;
+        console.log("startTime: " + startTime + "; pauseStartTime: " + pauseStartTime + "; pauseEndTime: " + pauseEndTime + "; pauseInterval: " + pauseInterval);
+
+
+    }
+    else{
+        pauseEndTime = new Date().getTime();
+        pauseInterval += pauseEndTime - pauseStartTime;
+        interval = setInterval(updateTimerText, 1000);
+        pauseStartTime = 0;
+        pauseEndTime = 0;
+        console.log("startTime: " + startTime + "; pauseStartTime: " + pauseStartTime + "; pauseEndTime: " + pauseEndTime + "; pauseInterval: " + pauseInterval);
+    }
+
+    paused = !paused
 }
 
 // Initialize Buttons of the DOM.
 function initializeDOM() {
     document.getElementById("hint").addEventListener("click", handleHintButton);
-    document.getElementById("swap").addEventListener("click", handleSwapButton)
+    document.getElementById("swap").addEventListener("click", handleSwapButton);
+    document.getElementById("clock").addEventListener("click", handleClockButton);
 }
 
 // Shuffle the tiles.
