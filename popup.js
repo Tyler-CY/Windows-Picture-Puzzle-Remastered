@@ -1,6 +1,5 @@
 addListenerToGridItems()
 document.getElementById("hint").addEventListener("click", handleHintButton);
-document.getElementById("checkEmptyGrid").addEventListener("click", makeRandomMove);
 document.getElementById("swap").addEventListener("click", handleSwapButton)
 
 /*
@@ -11,6 +10,23 @@ Helper Functions
 function handleSwapButton(){
     for (let i = 0; i < 100; i++){
         makeRandomMove();
+    }
+
+    var emptyGrid = findEmptyGrid();
+    // Extract the grid number (e.g. extract 15 from "grid15").
+    const gridNumber = Number(emptyGrid.id.toString().slice(4));
+    // Extract grid row and column
+    let gridRow = Number(String(gridNumber).slice(0, 1));
+    let gridCol = Number(String(gridNumber).slice(1));
+
+    // Moves the empty slot to the bottom right corner.
+    while (gridRow !== 3){
+        moveTileById("grid" + (gridRow + 1) + gridCol);
+        gridRow += 1;
+    }
+    while (gridCol !== 3){
+        moveTileById("grid" + gridRow + (gridCol + 1));
+        gridCol += 1;
     }
 }
 
