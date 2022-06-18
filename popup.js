@@ -220,15 +220,50 @@ function handleHintButton() {
     }
     for (let i = 0; i < length; i++) {
         // Change the visibility of the 16 grids.
-        gridList[i].style.display = visibility;
+        gridList[i].style.transition = "1s";
+        gridList[i].style.filter = "blur(6px)";
     }
 
-    // Change the background to the final full image as a hint, and revert it back if the hint button is clicked again.
-    if (visibility === "none") {
-        document.getElementById("innerWindow").style.backgroundImage = "url('res/numbers/numbers_full.png')";
-    } else {
-        document.getElementById("innerWindow").style.backgroundImage = "none";
+    // document.getElementById("innerWindow").style.pointerEvents = "none";
+
+    if (visibility === "none"){
+        document.getElementById("innerWindow").style.filter = "blur(6px)";
+        setTimeout(function() {
+            for (let i = 0; i < length; i++) {
+                // Change the visibility of the 16 grids.
+                gridList[i].style.display = visibility;
+            }
+
+
+        // Change the background to the final full image as a hint, and revert it back if the hint button is clicked again.
+
+
+            setTimeout(function(){
+                document.getElementById("innerWindow").style.backgroundImage = "url('res/numbers/numbers_full.png')";
+                document.getElementById("innerWindow").style.transition = "1s";
+                document.getElementById("innerWindow").style.filter = "none";
+
+            }, 100);
+        }, 1000);
     }
+    else {
+            document.getElementById("innerWindow").style.transition = "1s";
+            document.getElementById("innerWindow").style.filter = "blur(6px)";
+            setTimeout(function() {
+                document.getElementById("innerWindow").style.backgroundImage = "none";
+                for (let i = 0; i < length; i++) {
+                    // Change the visibility of the 16 grids.
+                    gridList[i].style.transition = "1.5s";
+                    gridList[i].style.filter = "none";
+                    gridList[i].style.display = visibility;
+                }
+                document.getElementById("innerWindow").style.transition = "1.2s";
+                document.getElementById("innerWindow").style.filter = "blur(0px)";
+            }, 1000);
+    }
+
+
+
 }
 
 // Initialize the grid items to listen to clicking.
