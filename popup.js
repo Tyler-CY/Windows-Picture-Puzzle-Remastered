@@ -41,19 +41,17 @@ function checkIfGameIsWon() {
         }
     }
 
-    console.log("true");
     return true;
 }
 
 // Update timer
 function updateTimerText() {
 
-    //console.log(new Date().getTime(), startTime, pauseInterval)
-    console.log("Duration from startTime: " + (new Date().getTime() - startTime) + "; pauseInterval: " + pauseInterval);
+    // console.log("Duration from startTime: " + (new Date().getTime() - startTime) + "; pauseInterval: " + pauseInterval);
     let duration = (new Date().getTime() - startTime - pauseInterval) / 1000;
 
 
-    console.log(duration);
+    // console.log(duration);
     let sec = Math.floor(duration % 60);
     let min = Math.floor(duration / 60) % 60;
     let hour = Math.floor(duration / 3600);
@@ -63,12 +61,11 @@ function updateTimerText() {
 
 // Pause the timer
 function handleClockButton(){
-    console.log("hi")
     if (!paused){
         clearInterval(interval);
         pauseStartTime = new Date().getTime();
         pauseEndTime = 0;
-        console.log("startTime: " + startTime + "; pauseStartTime: " + pauseStartTime + "; pauseEndTime: " + pauseEndTime + "; pauseInterval: " + pauseInterval);
+        // console.log("startTime: " + startTime + "; pauseStartTime: " + pauseStartTime + "; pauseEndTime: " + pauseEndTime + "; pauseInterval: " + pauseInterval);
 
 
     }
@@ -78,7 +75,7 @@ function handleClockButton(){
         interval = setInterval(updateTimerText, 1000);
         pauseStartTime = 0;
         pauseEndTime = 0;
-        console.log("startTime: " + startTime + "; pauseStartTime: " + pauseStartTime + "; pauseEndTime: " + pauseEndTime + "; pauseInterval: " + pauseInterval);
+        // console.log("startTime: " + startTime + "; pauseStartTime: " + pauseStartTime + "; pauseEndTime: " + pauseEndTime + "; pauseInterval: " + pauseInterval);
     }
 
     paused = !paused
@@ -102,7 +99,7 @@ function handleSwapButton() {
         // Extract grid row and column
         let gridRow = Number(emptyGrid.id.slice(4, 5));
         let gridCol = Number(emptyGrid.id.slice(5));
-        console.log(gridRow, gridCol);
+        // console.log(gridRow, gridCol);
 
         // Moves the empty slot to the bottom right corner.
         while (gridRow !== 3) {
@@ -147,6 +144,14 @@ function handleSwapButton() {
     document.getElementById("timerText").innerText = "00:00:00";
     // Remove the clear winning message
     // TODO: change to overlay
+
+    document.getElementById("winningText").remove();
+
+    let innerWindow = document.getElementById("innerWindow");
+    innerWindow.style.transition = "1s";
+    innerWindow.style.filter = "none";
+    innerWindow.style.pointerEvents = "auto";
+
     document.getElementById("testtext").innerText = "";
 }
 
@@ -293,7 +298,6 @@ function moveSingleTile(parentId) {
         } else {
             // document.getElementById("testtext").innerText = "Currently In Game";
         }
-
     }
 
 
@@ -301,14 +305,34 @@ function moveSingleTile(parentId) {
 
 // Moves the tile on the current grid to the adjacent available grid.
 // This method is called IF AND ONLY IF a tile is moved by a user
+// parentId is the div (class grid-item)
 function moveTileByButton() {
     const parentId = event.currentTarget.id;
+
     moveSingleTile(parentId);
 
     // Check if the move is game-winning
     if (checkIfGameIsWon()){
         clearInterval(interval);
         // TODO: change to overlay
+
+
+
+        const winningText = document.createElement("p");
+        winningText.id = "winningText";
+        winningText.innerText = "You Won!";
+        winningText.style.color = "white";
+        winningText.style.filter = "brightness(1)";
+        winningText.style.position = "absolute";
+        winningText.style.left = "72px";
+        winningText.style.top = "90px";
+        winningText.style.textAlign = "center";
+        document.getElementById("outerWindow").appendChild(winningText);
+
+        let innerWindow = document.getElementById("innerWindow");
+        innerWindow.style.transition = "1s";
+        innerWindow.style.filter = "brightness(0.25)";
+        innerWindow.style.pointerEvents = "none";
         document.getElementById("testtext").innerText = "You Won!";
     }
 }
