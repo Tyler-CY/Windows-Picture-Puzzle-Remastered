@@ -94,48 +94,91 @@ function handleSwapButton() {
     const gridList = document.querySelectorAll(".grid-item");
     const length = gridList.length;
 
-
+    for (let i = 0; i < length; i++) {
+        // Change the visibility of the 16 grids.
+        gridList[i].style.transition = "1s";
+        gridList[i].style.filter = "blur(6px)";
+    }
 
     if (checkIfGameIsWon()){
-        for (let i = 0; i < 500; i++) {
-            makeRandomMove();
-        }
+        document.getElementById("innerWindow").style.transition = "1s";
+        document.getElementById("innerWindow").style.filter = "blur(6px)";
 
-        const emptyGrid = findEmptyGrid();
-        // Extract grid row and column
-        let gridRow = Number(emptyGrid.id.slice(4, 5));
-        let gridCol = Number(emptyGrid.id.slice(5));
-        // console.log(gridRow, gridCol);
 
-        // Moves the empty slot to the bottom right corner.
-        while (gridRow !== 3) {
-            moveTileById("grid" + (gridRow + 1) + gridCol);
-            gridRow += 1;
-        }
-        while (gridCol !== 3) {
-            moveTileById("grid" + gridRow + (gridCol + 1));
-            gridCol += 1;
-        }
+        setTimeout(function() {
+            for (let i = 0; i < 500; i++) {
+                makeRandomMove();
+            }
+
+            const emptyGrid = findEmptyGrid();
+            // Extract grid row and column
+            let gridRow = Number(emptyGrid.id.slice(4, 5));
+            let gridCol = Number(emptyGrid.id.slice(5));
+            // console.log(gridRow, gridCol);
+
+            // Moves the empty slot to the bottom right corner.
+            while (gridRow !== 3) {
+                moveTileById("grid" + (gridRow + 1) + gridCol);
+                gridRow += 1;
+            }
+            while (gridCol !== 3) {
+                moveTileById("grid" + gridRow + (gridCol + 1));
+                gridCol += 1;
+            }
+
+            setTimeout(function(){
+                for (let i = 0; i < length; i++) {
+                    // Change the visibility of the 16 grids.
+                    gridList[i].style.transition = "1s";
+                    gridList[i].style.filter = "blur(0px)";
+                }
+                document.getElementById("innerWindow").style.transition = "1s";
+                document.getElementById("innerWindow").style.filter = "none";
+
+            }, 100);
+
+
+        }, 1000);
+
+
+
+
     }
     else{
-        // Moves the tiles to the winning positions
-        // Find all grid-items
-        const gridList = document.querySelectorAll(".grid-item");
-        const length = gridList.length;
+        document.getElementById("innerWindow").style.transition = "1s";
+        document.getElementById("innerWindow").style.filter = "blur(6px)";
 
-        // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
-        for (let i = 0; i < length; i++) {
-            if (gridList[i].firstChild) {
-                gridList[i].firstChild.remove();
+        setTimeout(function() {
+            // Moves the tiles to the winning positions
+            // Find all grid-items
+            const gridList = document.querySelectorAll(".grid-item");
+            const length = gridList.length;
+
+            // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+            for (let i = 0; i < length; i++) {
+                if (gridList[i].firstChild) {
+                    gridList[i].firstChild.remove();
+                }
             }
-        }
-        // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
-        for (let i = 0; i < length - 1; i++) {
-            const img = document.createElement("img");
-            img.src = "res/numbers/numbers_" + (i + 1) + ".png";
-            img.draggable = false;
-            gridList[i].appendChild(img);
-        }
+            // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+            for (let i = 0; i < length - 1; i++) {
+                const img = document.createElement("img");
+                img.src = "res/numbers/numbers_" + (i + 1) + ".png";
+                img.draggable = false;
+                gridList[i].appendChild(img);
+            }
+
+            setTimeout(function(){
+                for (let i = 0; i < length; i++) {
+                    // Change the visibility of the 16 grids.
+                    gridList[i].style.transition = "1s";
+                    gridList[i].style.filter = "blur(0px)";
+                }
+                document.getElementById("innerWindow").style.transition = "1s";
+                document.getElementById("innerWindow").style.filter = "none";
+            }, 100);
+        }, 1000);
+
     }
 
 
