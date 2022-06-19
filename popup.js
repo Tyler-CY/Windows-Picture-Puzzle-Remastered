@@ -148,6 +148,25 @@ function handleClockButton() {
     paused = !paused
 }
 
+/**
+ * Add click listener to all grid-items to handling moving puzzles.
+ */
+function addListenerToGridItems() {
+    // Find all grid-items
+    const gridList = getAllGridItems();
+
+    const length = gridList.length;
+
+    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+    for (let i = 0; i < length; i++) {
+        if (gridList[i].firstChild) {
+            gridList[i].firstChild.ondragstart = function () {
+                return false;
+            };
+        }
+        gridList[i].addEventListener("click", moveTileByButton);
+    }
+}
 
 /********************************************************************
  * Utility Helper Functions
@@ -210,6 +229,50 @@ function moveSingleTile(parentId) {
     }
 }
 
+/**
+ * Shuffle the tiles 500 times and move the empty grid to the bottom right corner.
+ * Called when the shuffle button (swap button) is clicked and the grids are in game-winning condition.
+ */
+function shuffleTiles() {
+    for (let i = 0; i < 500; i++) {
+        makeRandomMove();
+    }
+
+    const emptyGrid = findEmptyGrid();
+    // Extract grid row and column from the id string.
+    let {gridRow, gridCol} = getGridRowAndColumn(emptyGrid);
+
+    // Moves the empty slot to the bottom right corner.
+    // Moves the empty grid downwards until it reaches the bottom row.
+    while (gridRow !== 3) {
+        moveTileById("grid" + (gridRow + 1) + gridCol);
+        gridRow += 1;
+    }
+    // Moves the empty grid rightwards until reaches the right boundary.
+    while (gridCol !== 3) {
+        moveTileById("grid" + gridRow + (gridCol + 1));
+        gridCol += 1;
+    }
+}
+
+/**
+ * Makes a random move based on the position of the empty grid.
+ */
+function makeRandomMove() {
+    const emptyGrid = findEmptyGrid();
+
+    // Extract grid row and column from the id string
+    let {gridRow, gridCol} = getGridRowAndColumn(emptyGrid);
+
+    let adjacentGrids = getAdjacentGrids(gridRow, gridCol);
+
+    // Choose a random grid.
+    const randomGrid = adjacentGrids[Math.floor(Math.random() * adjacentGrids.length)];
+
+    // Make a random move based on the grid chosen.
+    moveTileById(randomGrid.id);
+}
+
 /**********************************
  * General Grid Helper Functions
  **********************************/
@@ -266,7 +329,7 @@ function determineGridListVisibility() {
  */
 function setGridSolution() {
     const gridList = getAllGridItems();
-    removeImagesInEachGrid(gridList);
+    removeImagesInEachGrid();
     bindSolutionImageToEachGrid(gridList);
 }
 
@@ -345,6 +408,52 @@ function checkIfNeighbouringGridsAreEmpty(gridRow, gridCol) {
     return {ifCondition, targetGrid};
 }
 
+/**
+ * Append the correct image to each of the grid-items in Inner Window.
+ */
+function bindSolutionImageToEachGrid() {
+    const gridList = getAllGridItems();
+    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+    const length = gridList.length;
+    for (let i = 0; i < length - 1; i++) {
+        const img = document.createElement("img");
+        img.src = "res/numbers/numbers_" + (i + 1) + ".png";
+        img.draggable = false;
+        gridList[i].appendChild(img);
+    }
+}
+
+/**
+ * Returns an array of grids (HTML element of class inner-grid and tag div) which is adjacent to grid(gridRow, gridCol).
+ * @param gridRow - a Number between 0 and 3 inclusive.
+ * @param gridCol - a Number between 0 and 3 inclusive.
+ * @returns {*[]} An array of grids (HTML element of class inner-grid and tag div).
+ */
+function getAdjacentGrids(gridRow, gridCol) {
+    // Find out the number of adjacent grids to the empty grid so we can randomly draw on of the grids to move.
+    let adjacentGrids = [];
+    // Update numOfAdjacentGrids by checking the four adjacent grids.
+    const topGridItem = document.getElementById("grid" + (gridRow - 1) + gridCol);
+    // If the adjacent grid is non null then add one to the number of adjacent grids.
+    if (topGridItem) {
+        adjacentGrids.push(topGridItem);
+    }
+    // Logic same as above.
+    const bottomGridItem = document.getElementById("grid" + +(gridRow + 1) + gridCol);
+    if (bottomGridItem) {
+        adjacentGrids.push(bottomGridItem);
+    }
+    const leftGridItem = document.getElementById("grid" + gridRow + (gridCol - 1));
+    if (leftGridItem) {
+        adjacentGrids.push(leftGridItem);
+    }
+    const rightGridItem = document.getElementById("grid" + gridRow + (gridCol + 1));
+    if (rightGridItem) {
+        adjacentGrids.push(rightGridItem);
+    }
+    return adjacentGrids;
+}
+
 /**********************************
  * Effects Helper Functions
  **********************************/
@@ -417,6 +526,60 @@ function startInnerWindowAnimation(transition, filter) {
     document.getElementById("innerWindow").style.filter = filter;
 }
 
+
+/**
+ * Clear the animation of grid list and inner window.
+ */
+function clearGridListAndInnerWindowAnimation() {
+    startGridListAnimation(TRANSITION_DURATION, FILTER_NO_BLUR);
+    startInnerWindowAnimation(TRANSITION_DURATION, FILTER_NONE);
+}
+
+/**
+ * Removes the img elements in each grid-item.
+ */
+function removeImagesInEachGrid() {
+    const gridList = getAllGridItems();
+    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+    for (let i = 0; i < gridList.length; i++) {
+        if (gridList[i].firstChild) {
+            gridList[i].firstChild.remove();
+        }
+    }
+}
+
+/**********************************
+ * Winning Text Helper Functions
+ **********************************/
+
+/**
+ * Removes the winningText HTML element from the DOM.
+ */
+function clearWinningText() {
+    const winningText = document.getElementById("winningText");
+    if (winningText) {
+        winningText.remove();
+    }
+}
+
+/**
+ * Creates a HTML element of tag p and is the winning text of the game.
+ * @returns {HTMLParagraphElement} - a winning text element.
+ */
+function createWinningTextElement() {
+    const winningText = document.createElement("p");
+    winningText.id = "winningText";
+    winningText.innerText = "You Won!";
+    winningText.style.color = "white";
+    winningText.style.filter = "brightness(1)";
+    winningText.style.position = "absolute";
+    winningText.style.left = "72px";
+    winningText.style.top = "90px";
+    winningText.style.textAlign = "center";
+    return winningText;
+}
+
+
 /**********************************
  * Game Mechanism Helper Functions
  **********************************/
@@ -454,143 +617,14 @@ function checkIfGameIsWon() {
     return true;
 }
 
-
 /**********************************
- * END
+ * Timer Helper Functions
  **********************************/
 
-
-
-
-
-
-// Shuffle the tiles.
-function shuffleTiles() {
-    for (let i = 0; i < 500; i++) {
-        makeRandomMove();
-    }
-
-    const emptyGrid = findEmptyGrid();
-    // Extract grid row and column from the id string.
-    let {gridRow, gridCol} = getGridRowAndColumn(emptyGrid);
-
-    // Moves the empty slot to the bottom right corner.
-    // Moves the empty grid downwards until it reaches the bottom row.
-    while (gridRow !== 3) {
-        moveTileById("grid" + (gridRow + 1) + gridCol);
-        gridRow += 1;
-    }
-    // Moves the empty grid rightwards until reaches the right boundary.
-    while (gridCol !== 3) {
-        moveTileById("grid" + gridRow + (gridCol + 1));
-        gridCol += 1;
-    }
-}
-
-
-function clearGridListAndInnerWindowAnimation() {
-    const gridList = getAllGridItems();
-    startGridListAnimation(TRANSITION_DURATION, FILTER_NO_BLUR);
-    startInnerWindowAnimation(TRANSITION_DURATION, FILTER_NONE);
-}
-
-function removeImagesInEachGrid(gridList) {
-    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
-    for (let i = 0; i < gridList.length; i++) {
-        if (gridList[i].firstChild) {
-            gridList[i].firstChild.remove();
-        }
-    }
-}
-
-function bindSolutionImageToEachGrid(gridList) {
-    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
-    const length = gridList.length;
-    for (let i = 0; i < length - 1; i++) {
-        const img = document.createElement("img");
-        img.src = "res/numbers/numbers_" + (i + 1) + ".png";
-        img.draggable = false;
-        gridList[i].appendChild(img);
-    }
-}
-
-
-function clearWinningText() {
-    const winningText = document.getElementById("winningText");
-    if (winningText) {
-        winningText.remove();
-    }
-}
-
-function resetTimer() {
-    // Clear previous timer and reset the time
-    clearInterval(interval);
-    document.getElementById("timerText").innerText = "00:00:00";
-}
-
-
-function getAdjacentGrids(gridRow, gridCol) {
-    // Find out the number of adjacent grids to the empty grid so we can randomly draw on of the grids to move.
-    let adjacentGrids = [];
-    // Update numOfAdjacentGrids by checking the four adjacent grids.
-    const topGridItem = document.getElementById("grid" + (gridRow - 1) + gridCol);
-    // If the adjacent grid is non null then add one to the number of adjacent grids.
-    if (topGridItem) {
-        adjacentGrids.push(topGridItem);
-    }
-    // Logic same as above.
-    const bottomGridItem = document.getElementById("grid" + +(gridRow + 1) + gridCol);
-    if (bottomGridItem) {
-        adjacentGrids.push(bottomGridItem);
-    }
-    const leftGridItem = document.getElementById("grid" + gridRow + (gridCol - 1));
-    if (leftGridItem) {
-        adjacentGrids.push(leftGridItem);
-    }
-    const rightGridItem = document.getElementById("grid" + gridRow + (gridCol + 1));
-    if (rightGridItem) {
-        adjacentGrids.push(rightGridItem);
-    }
-    return adjacentGrids;
-}
-
-
-// Makes a random move based on the position of the empty grid.
-function makeRandomMove() {
-    const emptyGrid = findEmptyGrid();
-
-    // Extract grid row and column from the id string
-    let {gridRow, gridCol} = getGridRowAndColumn(emptyGrid);
-
-    let adjacentGrids = getAdjacentGrids(gridRow, gridCol);
-
-    // Choose a random grid.
-    const randomGrid = adjacentGrids[Math.floor(Math.random() * adjacentGrids.length)];
-
-    // Make a random move based on the grid chosen.
-    moveTileById(randomGrid.id);
-}
-
-
-// Initialize the grid items to listen to clicking.
-function addListenerToGridItems() {
-    // Find all grid-items
-    const gridList = getAllGridItems();
-
-    const length = gridList.length;
-
-    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
-    for (let i = 0; i < length; i++) {
-        if (gridList[i].firstChild) {
-            gridList[i].firstChild.ondragstart = function () {
-                return false;
-            };
-        }
-        gridList[i].addEventListener("click", moveTileByButton);
-    }
-}
-
-
+/**
+ * Starts the timer and keep track of the time interval between timer starts and current time.
+ * Also updates timerText.
+ */
 function startTimer() {
     // Start the timer when the FIRST tile is moved after reshuffling.
     if (reshuffled) {
@@ -601,20 +635,39 @@ function startTimer() {
 }
 
 
-// Moves the tile on the current grid to the adjacent available grid.
-// This method is called IF AND ONLY IF a tile is moved by a user
-function createWinningTextElement() {
-    const winningText = document.createElement("p");
-    winningText.id = "winningText";
-    winningText.innerText = "You Won!";
-    winningText.style.color = "white";
-    winningText.style.filter = "brightness(1)";
-    winningText.style.position = "absolute";
-    winningText.style.left = "72px";
-    winningText.style.top = "90px";
-    winningText.style.textAlign = "center";
-    return winningText;
+/**
+ * Clear timer intervals and reset timerText.
+ */
+function resetTimer() {
+    // Clear previous timer and reset the time
+    clearInterval(interval);
+    document.getElementById("timerText").innerText = "00:00:00";
 }
+
+/**********************************
+ * END
+ **********************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
