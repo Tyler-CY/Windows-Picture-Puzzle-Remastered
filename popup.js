@@ -10,7 +10,7 @@ initializeDOM();
 
 addListenerToGridItems()
 
-handleSwapButton();
+// handleSwapButton();
 
 
 /*
@@ -29,7 +29,7 @@ function checkIfGameIsWon() {
         return false;
     }
 
-    // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
+    // Check correct position of each grid
     for (let i = 0; i < length - 1; i++) {
         if (gridList[i].firstChild) {
             let correct_position = (gridList[i].firstChild.src.toString()).includes("_" + (i + 1));
@@ -90,6 +90,12 @@ function initializeDOM() {
 
 // Shuffle the tiles.
 function handleSwapButton() {
+    // Blur all the grids
+    const gridList = document.querySelectorAll(".grid-item");
+    const length = gridList.length;
+
+
+
     if (checkIfGameIsWon()){
         for (let i = 0; i < 500; i++) {
             makeRandomMove();
@@ -115,7 +121,6 @@ function handleSwapButton() {
         // Moves the tiles to the winning positions
         // Find all grid-items
         const gridList = document.querySelectorAll(".grid-item");
-
         const length = gridList.length;
 
         // For each grid-item (in gridList), prevent the grid image from being dragged and add moving function to each grid.
@@ -145,7 +150,7 @@ function handleSwapButton() {
     // Remove the clear winning message
     // TODO: change to overlay
 
-    document.getElementById("winningText").remove();
+    // document.getElementById("winningText").remove();
 
     let innerWindow = document.getElementById("innerWindow");
     innerWindow.style.transition = "1s";
@@ -214,9 +219,9 @@ function handleHintButton() {
 
     // gridList[0].style.display is originally "" (empty string)
     // Determine what the visibility of the 16 grids should be changed to.
-    let visibility = "block";
-    if (gridList[0].style.display !== "none") {
-        visibility = "none";
+    let currentVisibility = "block";
+    if (gridList[0].style.display === "none") {
+        currentVisibility = "none";
     }
     for (let i = 0; i < length; i++) {
         // Change the visibility of the 16 grids.
@@ -226,12 +231,13 @@ function handleHintButton() {
 
     // document.getElementById("innerWindow").style.pointerEvents = "none";
 
-    if (visibility === "none"){
+    if (currentVisibility === "block"){
+        document.getElementById("innerWindow").style.transition = "1s";
         document.getElementById("innerWindow").style.filter = "blur(6px)";
         setTimeout(function() {
             for (let i = 0; i < length; i++) {
                 // Change the visibility of the 16 grids.
-                gridList[i].style.display = visibility;
+                gridList[i].style.display = "none";
             }
 
 
@@ -255,15 +261,12 @@ function handleHintButton() {
                     // Change the visibility of the 16 grids.
                     gridList[i].style.transition = "1.5s";
                     gridList[i].style.filter = "none";
-                    gridList[i].style.display = visibility;
+                    gridList[i].style.display = "block";
                 }
                 document.getElementById("innerWindow").style.transition = "1.2s";
                 document.getElementById("innerWindow").style.filter = "blur(0px)";
             }, 1000);
     }
-
-
-
 }
 
 // Initialize the grid items to listen to clicking.
