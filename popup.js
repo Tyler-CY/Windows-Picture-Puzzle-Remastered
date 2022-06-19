@@ -77,16 +77,14 @@ function handleSwapButton() {
     if (checkIfGameIsWon()) {
         setTimeout(function () {
             shuffleTiles();
-            setTimeout(function () {
-                startGridListAnimation(TRANSITION_DURATION, FILTER_NO_BLUR);
-                startInnerWindowAnimation(TRANSITION_DURATION, FILTER_NONE);
-            }, 1);
+            startGridListAnimation(TRANSITION_DURATION, FILTER_NO_BLUR);
+            startInnerWindowAnimation(TRANSITION_DURATION, FILTER_NONE);
         }, 1000);
 
     } else {
         setTimeout(function () {
             setGridSolution();
-            setTimeout(clearGridListAndInnerWindowAnimation, 1);
+            clearGridListAndInnerWindowAnimation();
         }, 1000);
     }
 
@@ -117,9 +115,7 @@ function handleHintButton() {
     if (determineGridListVisibility() === GRID_DISPLAY_BLOCK) {
         setTimeout(function () {
             hideAllGrids();
-
-            // Change the background to the final full image as a hint, and revert it back if the hint button is clicked again.
-            setTimeout(enableHintImageAndAnimation, 1);
+            enableHintImageAndAnimation();
         }, 1000);
     } else {
         setTimeout(disableHintImageAndAnimation, 1000);
