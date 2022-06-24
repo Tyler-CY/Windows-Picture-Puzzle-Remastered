@@ -20,6 +20,7 @@ const GRID_DISPLAY_NONE = "none";
 
 /* Transition Duration */
 const TRANSITION_DURATION = "1s";
+const TILE_TRANSLATION_TIME = 100;
 
 /* Hint Image Path */
 const HINT_FULL_IMAGE = "url('res/numbers/numbers_full.png')";
@@ -187,18 +188,48 @@ function moveTileById(parentId) {
 function moveTileByButton() {
     const parentId = event.currentTarget.id;
 
-    moveSingleTile(parentId);
+    moveSingleTileWithAnimation(parentId);
 
+    // Needs to setTimeout to deal with the animation delay.
     // Check if the move is game-winning
-    if (checkIfGameIsWon()) {
-        clearInterval(interval);
-        const winningText = createWinningTextElement();
-        document.getElementById("outerWindow").appendChild(winningText);
+    setTimeout(()=>{
+        if (checkIfGameIsWon()) {
+            clearInterval(interval);
+            const winningText = createWinningTextElement();
+            document.getElementById("outerWindow").appendChild(winningText);
 
-        let innerWindow = document.getElementById("innerWindow");
-        innerWindow.style.transition = TRANSITION_DURATION;
-        innerWindow.style.filter = FILTER_BRIGHTNESS;
-        innerWindow.style.pointerEvents = "none";
+            let innerWindow = document.getElementById("innerWindow");
+            innerWindow.style.transition = TRANSITION_DURATION;
+            innerWindow.style.filter = FILTER_BRIGHTNESS;
+            innerWindow.style.pointerEvents = "none";
+        }
+    }, TILE_TRANSLATION_TIME);
+
+}
+
+
+function moveSingleTileWithAnimation(parentId) {
+    // The grid clicked.
+    let grid = document.getElementById(parentId);
+
+    // Extract grid row and column from the id string
+    let {gridRow, gridCol} = getGridRowAndColumn(grid);
+    let {ifCondition, targetGrid} = checkIfNeighbouringGridsAreEmpty(gridRow, gridCol);
+
+    // Check if we can move the tile.
+    if (ifCondition) {
+        // Set Animation
+        setTileTranslationAnimation(TILE_TRANSLATION_TIME, grid, targetGrid);
+
+        // Swap images between the two grids.
+        setTimeout(() => {
+            targetGrid.appendChild(grid.firstChild);
+            // Remove the transformed animation after swapping.
+            targetGrid.firstChild.style.transform = "none";
+        }, TILE_TRANSLATION_TIME);
+
+        // Start the Timer and update the timer text.
+        startTimer();
     }
 }
 
@@ -218,8 +249,23 @@ function moveSingleTile(parentId) {
     // Check if we can move the tile.
     if (ifCondition) {
         // Swap images between the two grids.
+        grid.firstChild.style.transition = "200ms";
+
+        let {targetRow, targetCol} = getGridRowAndColumn(targetGrid);
+        if (targetRow > gridRow) {
+            grid.firstChild.style.transform = "translate(0px, 42px)";
+        } else if (targetRow < gridRow) {
+            grid.firstChild.style.transform = "translate(0px, -42px)";
+        } else if (targetCol > gridCol) {
+            grid.firstChild.style.transform = "translate(42px, 0px)";
+        } else if (targetCol < gridCol) {
+            grid.firstChild.style.transform = "translate(-42px, 0px)";
+        }
+        // setTimeout(()=>{targetGrid.appendChild(grid.firstChild);}, 200);
+
         targetGrid.appendChild(grid.firstChild);
 
+        // targetGrid.appendChild(grid.firstChild)
         // Start the Timer and update the timer text.
         startTimer();
     }
@@ -453,6 +499,33 @@ function getAdjacentGrids(gridRow, gridCol) {
 /**********************************
  * Effects Helper Functions
  **********************************/
+
+
+/**
+ *  * Sets the translation animation of the first child (image) of a grid
+ * @param translationTime - a Number indiciating the translation time in ms
+ * @param grid - a grid-item
+ * @param targetGrid - a grid-item which is the target the image needs to go
+ */
+function setTileTranslationAnimation(translationTime, grid, targetGrid) {
+    grid.firstChild.style.transition = translationTime + "ms";
+
+    let {gridRow, gridCol} = getGridRowAndColumn(grid);
+
+    // Somehow I can't use getGridRowAndColumn function here...
+    const targetRow = targetGrid.id.slice(4, 5);
+    const targetCol = targetGrid.id.slice(5);
+
+    if (targetRow > gridRow) {
+        grid.firstChild.style.transform = "translate(0px, 42px)";
+    } else if (targetRow < gridRow) {
+        grid.firstChild.style.transform = "translate(0px, -42px)";
+    } else if (targetCol > gridCol) {
+        grid.firstChild.style.transform = "translate(42px, 0px)";
+    } else if (targetCol < gridCol) {
+        grid.firstChild.style.transform = "translate(-42px, 0px)";
+    }
+}
 
 /**
  * Start animation for all grid slots
