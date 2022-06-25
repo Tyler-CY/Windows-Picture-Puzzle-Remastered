@@ -2,6 +2,11 @@
 
 A remastered version for Windows' desktop gadget, Picture Puzzle, originally available in Windows Vista and 7.
 
+Original Game | Remastered Version (Not Completed)
+--- | ---
+![Original Game](./res/doc/img/game_original_screenshot.png) | ![Remastered Version](./res/doc/img/game_remastered_screenshot.png)
+
+
 ## Description
 
 Windows Picture Puzzle Remastered is a minigame which you can play via Chrome's browser extension.
